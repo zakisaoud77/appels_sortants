@@ -1,0 +1,9 @@
+
+* Il faut un login pour les opérateurs et l'adminstrateur
+* Il faut que l'admin puisse créer des comptes pour les opérateurs
+
+- Il faut connecter le bouton appeler avec amazon connect (avec oussama)
+
+- Il faut ajouter des boutons quand on raccroche de l'appel
+
+------------------------

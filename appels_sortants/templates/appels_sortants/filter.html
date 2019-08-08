@@ -1,0 +1,18 @@
+{% extends 'appels_sortants/base.html' %}
+{% block content %}
+    <form action="" method="get">
+        {{ filter.form.as_p }}
+        <input type="submit" />
+    </form>
+
+    {% for obj in filter.qs %}
+        <div class="post">
+            <div class="date">
+                {{ obj.published_date }}
+            </div>
+            <h1><a>{{ obj.title }}</a></h1>
+            <p>{{ obj.text|linebreaksbr }}</p>
+        </div>
+    {% endfor %}
+    
+{% endblock %}

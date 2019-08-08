@@ -1,0 +1,17 @@
+{% extends 'appels_sortants/base.html' %}
+{% block content %}
+{% load static %}
+
+    <div class="user">
+        
+
+        <h1>Username: {{ user.username }}</a></h1>
+        <h2>Prenom: {{ user.first_name }}</h3>
+        <h2>Nom: {{ user.last_name }}</h4>
+        <h3>Email : {{ user.email }}</h2>
+        <h4>Dernière connexion : {{ user.last_login }}</h4>
+        <h4>Date d'inscription : {{ user.date_joined }}</h4>
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+
+{% load staticfiles %}
+
+<script src="{% static "js/jquery.js" %}"></script>
+<script src="{% static "js/rango-jquery.js" %}"></script>
+
+
+<form action="{% url 'appels_sortants:contact_delete' record.id %}" method="post">{% csrf_token %}
+	<input type="hidden" name="_method" value="delete">
+	<button Onclick="return ConfirmDelete()" id="btndelete" data-toggle="tooltip" title="Supprimer un contact" type="submit" class="btn btn-danger btn-xs">
+	Supprimer </button>
+</form>
+
+

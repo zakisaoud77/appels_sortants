@@ -1,0 +1,63 @@
+{% extends 'appels_sortants/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Datepicker - Default functionality</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <!--script src="{% static "js/jquery.datetimepicker.full.js" %}"></script-->
+
+  <script src="{% static "js/jquery-ui-timepicker-addon.js" %}"></script>
+
+  <!--link rel="stylesheet" href="{% static 'css/jquery.datetimepicker.css' %}"-->
+  <link rel="stylesheet" href="{% static 'css/jquery-ui-timepicker-addon.css' %}">
+
+  <script>
+
+
+  $( function() {
+    //$('#datetimepicker').datetimepicker({ format:'d/m/Y h:m' });
+    $('#datetimepicker').datetimepicker({  dateFormat: 'dd/mm/yy' });
+
+
+  } );
+
+
+  </script>
+</head>
+<body>
+ 
+   
+    <!--h2>Nouveau Contact</h2-->
+    <!--form method="POST"  class="contact-form">{% csrf_token %}
+        {{ form.as_p }}
+        <button Onclick="return ConfirmEdit()" id="btnedite" type="submit" class="save btn btn-default" title="Sauvgarder les modifications">Save</button>
+    </form-->
+
+<div class="form-bg2">
+   <form method="POST"  class="contact-form">{% csrf_token %}
+    <div class="container-fluid">
+
+            <div class="col-md-6">
+                    <h1 class="heading"> Modifier le Contact </h1>
+                    <div class="form-group">
+                   {{ form.as_p }}
+                     <button Onclick="return ConfirmEdit()" id="btnedite" type="submit" class="save btn btn-default" title="Sauvgarder les modifications">Save </button>
+                    </div>
+            </div>
+    </div>
+  </form>
+</div>
+
+
+</body>
+
+
+{% endblock %}

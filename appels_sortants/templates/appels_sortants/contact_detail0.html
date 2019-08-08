@@ -1,0 +1,76 @@
+{% extends 'appels_sortants/base.html' %}
+{% block content %}
+{% load static %}
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Datepicker - Default functionality</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="{% static "js/jquery.datetimepicker.full.js" %}"></script>
+  <link rel="stylesheet" href="{% static 'css/jquery.datetimepicker.css' %}">
+
+
+   
+    <div class="contact" >
+        
+        {% if user.is_superuser %}
+         
+        <a class="btn btn-primary btn-sm  pull-right" href="{% url 'appels_sortants:contact_edit' pk=contact.pk %}"><span class="glyphicon glyphicon-pencil"> Modifier </span></a>
+
+
+        <form  action="{% url 'appels_sortants:contact_delete2' pk=contact.pk %}" method="post" class='form1'>{% csrf_token %}
+        <input type="hidden" name="_method" value="delete">
+        <button class="btn btn-danger btn-sm pull-left"" Onclick="return ConfirmDelete()" id="btndelete" data-toggle="tooltip" title="Supprimer un contact" type="submit" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span> Supprimer </button>
+        </form>
+
+        {% endif %}
+        
+        {% if user.is_authenticated %}
+        <h1> Nom : {{ contact.nom }}</a></h1>
+        <h2> Prenom : {{ contact.prenom }}</h2>
+        <h3> Adresse : {{ contact.adresse }}</h3>
+        <h4> Mobile : {{ contact.mobile|linebreaksbr }}</h4>
+        <h4> Date cible : {{ contact.prochain_appel_date }}</h4>
+
+        {% if contact.dernier_appel_date %}
+        <h4>  date dernier appel :  {{ contact.dernier_appel_date }} </h4>
+        {% endif %}
+    </div>
+
+    <div class="bouton">
+        
+        {% if not vide %}
+         {% if not islast %}
+          <a class="btn btn-primary btn-md" href="{% url 'appels_sortants:contact_next' pk=contact.pk %}"><span class="glyphicon glyphicon-chevron-right"></span> Contact suivant </a>
+         {% else %}
+          <a class="btn btn-info btn-md" href="{% url 'appels_sortants:contact_detail' pk=first.pk %}"><span class="glyphicon glyphicon-backward"></span> Revenir au debut </a>
+         {% endif %}
+        {% endif %}
+        
+        <form  action="{% url 'appels_sortants:bla'  pk=contact.pk %}" method='GET'>
+        <button class="btn btn-success btn-md"  type='submit'><span class="glyphicon glyphicon-earphone"></span> Appeler </button>
+        </form> 
+  
+    </div>
+    
+
+    <div class = "bouton2">
+
+        <form  action="{% url 'appels_sortants:bla'  pk=contact.pk %}" method='GET'>
+        <button class="btn btn-success btn-md" type='submit'><span class="glyphicon glyphicon-ok-sign"></span> Disponible </button>
+        </form> 
+
+
+        <form  action="{% url 'appels_sortants:date_edit'  pk=contact.pk %}" method='GET'>
+        <button class="btn btn-warning btn-md" type='submit'><span class="glyphicon glyphicon-remove-sign"></span> Non Disponible </button>
+        </form> 
+
+     </div>
+
+
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,14 @@
+Commandes pour resoudre problem de connexion avec la BD :
+---------------------------------------------------------
+
+1- ALTER USER 'yourusername'@'localhost' IDENTIFIED WITH mysql_native_password BY 'youpassword'
+
+
+2- USE 'mysql';
+
+GRANT ALL PRIVILEGES ON test.* TO 'django_user'@'localhost' IDENTIFIED BY 'Zz000000+' 
+
+WITH GRANT OPTION;
+
+
+FLUSH PRIVILEGES;

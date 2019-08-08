@@ -1,0 +1,64 @@
+
+{% extends 'appels_sortants/base.html' %}
+{% load django_tables2 %}
+{% load static %}
+{% block content %}
+
+
+<head>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="{% static "js/rango-jquery.js" %}"></script>
+
+</head>
+
+<body>
+
+<a href="{% url 'appels_sortants:contact_new' %}" class="btn btn-info btn-md"><span class="glyphicon glyphicon-plus" style="color:DodgerBlue"></span> Ajouter un contact</a>
+
+
+<a id="bouton_import" class="btn btn-success btn-md" type='submit' data-toggle="modal" data-target="#myModal" ><span class="glyphicon glyphicon-folder-open" style="color:SaddleBrown"></span> Importer des contacts</a>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel">
+ <div class="modal-dialog">
+    <div class="modal-content">
+             <form method="post" action = "{% url 'appels_sortants:contacts_upload2' %}" enctype="multipart/form-data">
+             {% csrf_token %}
+              <div class="modal-header">
+                 <h4 class="modal-title"> Veuillez  importer votre liste des contacts 
+                 </h4>
+                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              </div>
+              <div class="modal-body">
+               <label> Upload a file </label>
+               <input type="file" name="file">
+               <p>( Only accepts CSV files ) </p>
+               <button id="upload_contacts" type="submit">Upload</button>
+              </div>
+             </form>
+    </div>
+  </div>
+</div>
+
+
+
+  <!--form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <label> Upload a file </label>
+  <input type="file" name="file">
+  <p>Only accepts CSV files </p>
+  <button type="submit">Upload</button>
+  </form-->
+
+{% render_table table %}
+
+
+</body>
+
+
+{% endblock content %}

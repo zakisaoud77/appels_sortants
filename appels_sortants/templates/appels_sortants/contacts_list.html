@@ -1,0 +1,19 @@
+{% extends 'appels_sortants/base.html' %}
+
+{% block content %}
+    {% for contact in contacts %}
+        <div class="contact">
+            <h1>Nom : <a href="{% url 'appels_sortants:contact_detail' pk=contact.pk %}">{{ contact.nom }}</a></h1>
+            <h2>Prenom : {{ contact.prenom }}</h2>
+            <h3>Adresse : {{ contact.adresse }}</h3>
+            <h4> Mobile : {{ contact.mobile|linebreaksbr }}</h4>
+
+            {% if contact.dernier_appel_date %}
+            <div class="date">
+               <h4>  date dernier appel :  {{ contact.dernier_appel_date }} </h4>
+            </div>
+            {% endif %}
+            
+        </div>
+    {% endfor %}
+{% endblock %}

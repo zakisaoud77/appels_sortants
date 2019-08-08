@@ -1,0 +1,254 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <header class="main-header">
+            <link rel="stylesheet" href="style.css"> 
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+  window.myCPP = window.myCPP || {};
+    var ccpUrl = "https://appelssortants.awsapps.com/connect/ccp#/";
+    //var ccpUrl = "https://call-center-experteam.awsapps.com/connect/ccp#/"
+    connect.core.initCCP(containerDiv, {
+        ccpUrl: ccpUrl,        
+        loginPopup: true,         
+        softphone: {
+            allowFramedSoftphone: true
+        }
+    });
+
+    connect.contact(subscribeToContactEvents);
+    connect.agent(subscribeToAgentEvents);
+
+
+  function displayCaller(phoneNumber) {
+    var listCaller = {
+      "+19292240694": "Gaëtan",
+      "+33642915377": "Didier",
+      "+33668431756" : "Oussama"
+    };
+    if (phoneNumber in listCaller)
+      var caller = listCaller[phoneNumber];
+    else
+      var caller = "Unknow";
+    
+        document.getElementById("infoCaller").innerHTML = "Appel entrant du " + phoneNumber + " " + caller;
+        $(".elem-demo").notify(caller , "success" ) ;
+    setTimeout(function (){
+        document.getElementById("infoCaller").innerHTML = "";
+        
+    }, 8000);
+  }
+
+    function callPhone() {
+        var myPhoneNumber = document.getElementById("myPhoneNumber").value;
+        myPhoneNumber = myPhoneNumber;
+        document.getElementById("infoPersonCalled").innerHTML = "Appel en cours vers " + myPhoneNumber;
+    setTimeout(function (){
+    document.getElementById("infoPersonCalled").innerHTML = "";
+    }, 8000);
+        var myEndPoint = connect.Endpoint.byPhoneNumber(myPhoneNumber);
+        window.myCPP.agent.connect(myEndPoint, {
+            success: function() {
+                //alert('success');
+            },
+            failure: function() {
+                //alert('error');
+            }
+        });
+    }
+
+    function callPhone2() {
+        var e = document.getElementById("selectPhone");
+    var selectedName = e.options[e.selectedIndex].text;
+    var myPhoneNumber = e.options[e.selectedIndex].value;
+  //  myPhoneNumber = "+33" + myPhoneNumber;
+        document.getElementById("infoPersonCalled").innerHTML = "Appel en cours vers " + selectedName + "("+ myPhoneNumber + ")";
+    setTimeout(function (){
+    document.getElementById("infoPersonCalled").innerHTML = "";
+    }, 8000);
+        var myEndPoint = connect.Endpoint.byPhoneNumber(myPhoneNumber);
+        window.myCPP.agent.connect(myEndPoint, {
+            success: function() {
+                //alert('success');
+            },
+            failure: function() {
+                //alert('error');
+            }
+        });
+    }
+
+
+    function CallEXT() {
+    var txt;
+    var myPhoneNumber = prompt("Entrez le numéro de téléphone avec +33 :", "+33668431756");
+        //txt = "0033668431756";
+        //document.getElementById("demo").innerHTML = txt;
+        document.getElementById("infoPersonCalled").innerHTML = "Appel en cours vers " + myPhoneNumber;
+    setTimeout(function (){
+    document.getElementById("infoPersonCalled").innerHTML = "";
+    }, 8000);
+    var myEndPoint = connect.Endpoint.byPhoneNumber(myPhoneNumber);
+                window.myCPP.agent.connect(myEndPoint, {
+                success: function() {
+                       // alert('success');
+                                    },
+                    failure: function() {
+                //alert('error');
+            }
+        });
+    
+        
+  //console.log(txt + "message " + phone);
+}
+
+
+            </script>
+            <!-- <script type="text/javascript" src="notify.js"></script> -->
+            <!-- <script type="text/javascript" src="script.js"></script> -->
+            <!-- <script type="text/javascript" src="connect-streams.js" ></script> -->
+           
+            <script src="{% static "js/amazon-connect-v1.3.2.js" %}"></script>
+            <!-- <script src="{% static "js/aws_amazon_connect.js" %}"></script> -->
+            <script src="{% static "js/connect-streams.js" %}"></script>
+            
+            <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+            <title>SoftPhone DEV</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+         <div class="main-header"></div>   
+<style > </style>
+
+    </header>
+<body>
+    <div  id="topDiv" class="main-header">
+        <div id="myApp">
+            
+                <h1>Softphone DEV </h1>
+            <h3 id="infoPersonCalled"></h3>
+            <h3 id="infoCaller"></h3>
+            <!-- <h2  class="elem-demo"></h2> -->
+        </div>
+    </div>
+    <div>
+        <!-- <input name="notif" type="button" value="Shoow notif" onclick="$('.elem-demo').notify('Hello Box' ,'happyblue');"/> -->
+        <button class="EnlineBtn" type="button" id="goAvailableDiv"  onclick="goAvailable()"><i class="material-icons">power</i></button>
+        <button class="OfflineBtn" id="goOfflineDiv"  onclick="goOffline()" ><i class="material-icons">power_off</i></button>
+        <button class="PauseBtn" id="goOfflineDiv"  onclick="Pause()" ><i class="material-icons">pause_circle_filled</i></button>
+        <button class="AfterCallBtn" id="goOfflineDiv"  onclick="AfterCall()" ><i class="material-icons">autorenew</i></button>
+        <button class="AnswBtn" id="answerDiv"  onclick="acceptContact()">  <i class="material-icons">call</i>  </button>
+        <button class="HngBtn" id="hangupDiv"  onclick="disconnectContact()"> <i class="material-icons">call_end</i> </button>
+        <button class="OfflineBtn" type="button" id="goAvailableDiv"  onclick="holdcall()"><i class="material-icons">phone_paused</i></button>
+        <button class="EnlineBtn" id="goOfflineDiv"  onclick="resumecall()" ><i class="material-icons">phone_in_talk</i></button>
+        <button class="but but5" id="goOfflineDiv"  onclick="QuickConnect()" >
+                <i class="material-icons">
+                    phone_forwarded
+                    </i></button>
+            <div id="myDIV" style="display:none">
+            <button class="but but1" id="goOfflineDiv"  onclick="Transfert(0)" >Q1</button>
+            <button class="but but2" id="goOfflineDiv"  onclick="Transfert(1)" >Q2</button>
+            <button class="but but3" id="goOfflineDiv"  onclick="Transfert(2)" >Q3</button>
+            <button class="but but4" id="goOfflineDiv"  onclick="Transfert(3)" >Q4</button>
+        
+<!-- <div class="elem-demo">a Box</div> -->
+    </div>
+    <button class="TaxiBtn" id="goOfflineDiv"  onclick="CallEXT()" ><i class="material-icons">local_taxi</i></button>
+  
+
+    <div id="gridDiv" style="display: grid; grid-template-columns: 350px 400px 400px">
+        <div  id="containerDiv" style="width: 320px; min-width: 200px; height: 465px; min-height: 400px; ">
+            <!--Amazon CCP is hiding in here-->
+        </div>
+        <div class="TabDown" id="customCCPDiv" style="width: 370px; min-width: 200px; height: 465px; min-height: 400px;">
+            <!-- custom user experience goes here -->
+            <div   id="statusDiv">
+                <div  id="agentGreetingDiv" style="padding: 5px;">
+                    
+                    <!-- say hi to the agent style= "background-color: blue; padding: 10px; margin: 10px 60px 10px 60px" -->
+                </div>
+               <!--  <div id="EnlineBtn" style="padding: 5px;">
+                </div> -->
+                <!-- <div class="TabMid" >
+                        <ul >
+                                <li>Ctrl+Alt+w</li>
+                                <li>Ctrl+Alt+x</li>
+                                <li>Ctrl+Alt+q</li>
+                                <li>Ctrl+Alt+s</li>
+                                <li>Ctrl+Alt+a</li>
+                                <li>Ctrl+Alt+z</li>
+                                <li>Ctrl+Alt+c</li>
+                              </ul> 
+                    <span class="EnlineBtn" id="goAvailableDiv"  onclick="goAvailable()">Go Available</span>
+                    <span class="OfflineBtn" id="goOfflineDiv"  onclick="goOffline()" >Go Offline</span><br />
+                     </div> -->
+                    </div>
+                     
+                     
+                
+            <!-- <div id="contactActionsDiv"> -->
+                
+                    <table>
+                        <ul>
+                <li> la touche 9 => En ligne</li>
+                <li> la touche 0 => Hors ligne </li>
+                <li> la touche P => Pause </li>
+                <li> la touche O => AfterCall </li>
+                <li> la touche Q => Repondre </li>
+                <li>  la touche S => Raccrocher       </li>
+                <li>  la touche C => Mute </li>
+                <li>  la touche V => Unmute </li>
+                <li>  la touche ² => Transfert </li>
+                <li>  la touche 1 => Service A  </li>
+                <li>  la touche 2 => Service B   </li>
+                <li>  la touche 3 => Service C  </li>
+                <li>  la touche 4 => Service D  </li>
+                <li>  la touche 4 => Appler un numéro  </li>
+            </ul>
+
+                    </table>
+                
+                <br />
+                <div id="callDiv" style="text-align: center">
+                    <label for="myPhoneNumber"></label>
+                    <input id="myPhoneNumber" type="text" name="mobile" pattern="[0-9]{9}" title="Entrer les 9 chiffres de votre numéro +33..." placeholder="Mobile number (+33)" required>
+                    <button type="button" onclick="callPhone()">
+                        Call
+                    </button>
+                </div>
+                
+                <div style="text-align: center">
+                  <select id="selectPhone">
+              <option value="+33668431756" selected="selected">Oussama</option>
+              <option value="+33619931271">Patrice</option>
+                          <option value="+33642915377">Didier</option>
+                          <option value="+33650044466">Gaetan</option>
+          </select>
+          <button type="button" onclick="callPhone2()">
+                        Call
+                    </button>
+                                    </div>
+            <!-- </div> -->
+            
+            
+        
+        
+        </div>
+        <div class="tablog" id="logMsgsContainer">
+            <h2>Statut </h2>
+            <div id="logMsgs" style="height: 465px; overflow: auto;">
+                <!-- log messages will go here -->
+            </div>
+        </div>
+        <div class="tabevent" id="eventMsgsContainer">
+            <h2>Evenements </h2>
+            <div id="eventMsgs" style="height: 465px; overflow: auto;">
+                <!-- events from Streams API will go here-->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

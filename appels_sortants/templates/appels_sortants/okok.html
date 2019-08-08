@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <header class="main-header">
+            <!-- <link rel="stylesheet" href="style.css"> 
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+
+            <script type="text/javascript" src="notify.js"></script> -->
+            <!-- <script type="text/javascript" src="script.js"></script> -->
+            <!-- <script type="text/javascript" src="connect-streams.js" ></script> -->
+            <script src="{% static "js/amazon-connect-v1.3.2.js" %}"></script>
+
+            <!--<script src="{% static "js/aws_amazon_connect.js" %}"></script>
+            <script src="{% static "js/connect-streams.js" %}"></script>
+
+            <link rel="stylesheet" href="{% static 'css/style.css' %}"> 
+
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">-->
+            <title>SoftPhone DEV</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+         <div class="main-header"></div>   
+<style > </style>
+
+    </header>
+ <!DOCTYPE html>
+ <html>
+ <body>
+ <div id="myApp">
+ <h1>Amazon Connect Streams API Samples<h1>
+ <h2>Embedding CCP</h2>
+ </div>
+ <div id="containerDiv" style="width: 320px; min-width: 200px; height: 465px; min-height: 400px; ">
+ <!--Amazon CCP will go here-->
+ </div>
+ </body>
+ </html>
+ <script type="text/javascript">
+ //replace with the CCP URL for your Amazon Connect instance
+ var ccpUrl = "https://mycallcenterexperteam.awsapps.com/connect/ccp#/";
+
+ connect.core.initCCP(containerDiv, {
+    ccpUrl: ccpUrl,
+    loginPopup: true,
+    softphone: {
+    allowFramedSoftphone: true
+    }
+ });
+ </script>
+
+ </html>

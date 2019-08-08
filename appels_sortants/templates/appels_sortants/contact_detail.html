@@ -1,0 +1,259 @@
+{% extends 'appels_sortants/base.html' %}
+{% block content %}
+{% load static %}
+
+
+<head>
+
+
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+  <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Datepicker - Default functionality</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <!--script src="{% static "js/jquery.datetimepicker.full.js" %}"></script-->
+  <script src="{% static "js/jquery-ui-timepicker-addon.js" %}"></script>
+
+  <!--link rel="stylesheet" href="{% static 'css/jquery.datetimepicker.css' %}"-->
+  <link rel="stylesheet" href="{% static 'css/jquery-ui-timepicker-addon.css' %}">
+
+  <script src="{% static "js/amazon-connect-v1.3.2.js" %}"></script>
+
+
+  <script>
+  $( function() {
+    //$('#datetimepicker').datetimepicker({ format:'d/m/Y h:m' });
+    $('#datetimepicker').datetimepicker({  dateFormat: 'dd/mm/yy' });
+
+
+  } );
+  </script>
+
+
+</head>
+
+
+<body>
+
+{% if user.is_authenticated %}
+  <div class="form-bg3">
+
+   <div class="col-md-6" >
+    <div class="contact" style="border-radius: 15px;">
+      <div class="container-fluid" >
+        
+        {% if user.is_superuser %}
+         
+        <a class="btn btn-primary btn-sm  pull-right" href="{% url 'appels_sortants:contact_edit' pk=contact.pk %}"><span class="glyphicon glyphicon-pencil"> Modifier </span></a>
+
+        
+        <form  action="{% url 'appels_sortants:contact_delete2' pk=contact.pk %}" method="post" class='form1'>{% csrf_token %}
+        <input type="hidden" name="_method" value="delete">
+        <button class="btn btn-danger btn-sm pull-left"" Onclick="return ConfirmDelete()" id="btndelete" data-toggle="tooltip" title="Supprimer un contact" type="submit" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span> Supprimer </button>
+        </form>
+
+        {% endif %}
+        
+        <div class="info">
+        <h1> <b>Nom </b> : {{ contact.nom }} </h1>
+        <h2> <b> Prenom </b> : {{ contact.prenom }}</h2>
+        <h4> <b> Adresse </b> : {{ contact.adresse }}</h4>
+        <h4> <b> Mobile </b> : {{ contact.mobile|linebreaksbr }}</h4>
+        <h4> <b> Date cible </b>: {{ contact.prochain_appel_date }}</h4>
+
+        {% if contact.dernier_appel_date %}
+        <h4>  date dernier appel :  {{ contact.dernier_appel_date }} </h4>
+        {% endif %}
+
+
+       </div>
+      </div>
+      </div>
+    </div>
+</div>
+
+
+
+    <div class="bouton">
+        
+        {% if not vide %}
+         {% if not islast %}
+          <a  id="bouton_suivant" class="btn btn-primary btn-md" href="{% url 'appels_sortants:contact_next' pk=contact.pk %}"><span class="glyphicon glyphicon-chevron-right"></span> Contact suivant </a>
+         {% else %}
+          <a class="btn btn-info btn-md" href="{% url 'appels_sortants:contact_detail' pk=first.pk %}"><span class="glyphicon glyphicon-backward"></span> Revenir au debut </a>
+         {% endif %}
+        {% endif %}
+        
+        <!-- button id ="bouton_call" class="btn btn-success btn-md" data-catid="{{ contact.pk }}" type='submit'><span class="glyphicon glyphicon-earphone"></span> Appeler </button-->
+
+      <button id="bouton_call" class="btn btn-success btn-md" type='submit' data-toggle="modal" data-target="#myModal3"  data-catid="{{ contact.pk }}" > <span class="glyphicon glyphicon-earphone"></span>  Appeler </button>
+
+  
+    </div>
+    
+
+    <div class = "bouton2">
+
+        <button id="bouton_dis" class="btn btn-success btn-md" type='submit' data-toggle="modal" data-target="#myModal2"><span class="glyphicon glyphicon-ok-sign"></span> Disponible </button>
+
+
+        <button id="bouton_nondis" class="btn btn-warning btn-md" type='submit' data-toggle="modal" data-target="#myModal"> <span class="glyphicon glyphicon-remove-sign"></span> Non Disponible </button>
+        
+
+     </div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel">
+ <div class="modal-dialog">
+    <div class="modal-content">
+        <form method="POST"  class="contact-form">
+            {% csrf_token %}
+                <div class="modal-header">
+                    <h4 class="modal-title"> Veuillez fixer une date pour le prochain appel </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                  {% csrf_token %}
+                  {{ form.as_p }}
+                  <button data-catid="{{ contact.pk }}" Onclick="return ConfirmEdit()" id="bt_next_date" type="submit" class="save btn btn-default" title="Sauvgarder les modifications"> Sauvgarder</button>
+               </form>
+             </div>
+               <!--div class="modal-footer">
+                   <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                   <input type="submit" class="btn btn-success" value="Add">
+               </div-->
+               
+    </div>
+</div>
+</div>
+
+
+
+<div class="modal fade" id="myModal2" role="dialog" aria-labelledby="myModalLabel">
+ <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title"> Est ce que le client était intéressé ?  </h4>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body">
+        <form id="myForm">
+          <div>
+           <input  type="radio" id="oui_interese" name="drone" value="interested" checked>
+           <label for="huey">Oui</label>
+          </div>
+
+          <div>
+            <input type="radio" id="non_interese" name="drone" value="non_interested">
+            <label for="dewey">Non</label>
+          </div>
+
+          <button data-catid="{{ contact.pk }}" id="btconfirm_interet" type="submit" class="save btn btn-default"> Confirmer </button>
+        </form>
+        </div>
+    </div>
+ </div>
+</div>
+
+
+<div class="modal fade" id="myModal3" role="dialog" aria-labelledby="myModalLabel">
+ <div class="modal-dialog" style="padding-right: 11.6%;padding-left: 10%;">
+    <div class="modal-content"  >
+        <div class="modal-header" >
+          <!--h4 class="modal-title"> Amazon connect </h4-->
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+        <div class="modal-body" style="padding: 0px;">
+
+        <div id="containerDiv" style="width: 320px; min-width: 200px; height: 465px; min-height: 400px; "></div>
+
+      </div>
+    </div>
+ </div>
+</div>
+
+
+   <script type="text/javascript">
+ //replace with the CCP URL for your Amazon Connect instance
+ var ccpUrl = "https://mycallcenterexperteam.awsapps.com/connect/ccp#/";
+
+    window.myCPP = window.myCPP || {};
+ connect.core.initCCP(containerDiv, {
+    ccpUrl: ccpUrl,
+    loginPopup: true,
+    softphone: {
+    allowFramedSoftphone: true
+    }
+ });
+    
+
+  connect.contact(subscribeToContactEvents);
+  connect.agent(function subscribeToAgentEvents(agent) {
+        window.myCPP.agent = agent;
+        agentGreetingDiv.innerHTML = '<h3>Bonjour  ' + agent.getName() + '!</h3>';
+        //logInfoMsg("Enregistrement des événements de  " + agent.getName());
+        //logInfoMsg("Le statut de " +  agent.getName() + agent.getStatus().name);
+        displayAgentStatus(agent.getStatus().name);
+        agent.onRefresh(handleAgentRefresh);
+        agent.onRoutable(handleAgentRoutable);
+        agent.onNotRoutable(handleAgentNotRoutable);
+        agent.onOffline(handleAgentOffline);
+    }
+);
+
+  var myPhoneNumber = {{ contact.mobile }};
+  var myEndPoint = connect.Endpoint.byPhoneNumber(myPhoneNumber);
+        window.myCPP.agent.connect(myEndPoint, {
+            success: function() {
+                //alert('success');
+            },
+            failure: function() {
+                //alert('error');
+            }
+        });
+function subscribeToContactEvents(contact) {
+        window.myCPP.contact = contact;
+        //logInfoMsg("Enregistrement des événements du contact");
+        if (contact.getActiveInitialConnection()
+            && contact.getActiveInitialConnection().getEndpoint()) {
+            logInfoMsg("Un appel de : " + contact.getActiveInitialConnection().getEndpoint().phoneNumber);
+            displayCaller(contact.getActiveInitialConnection().getEndpoint().phoneNumber);
+            var Callers = contact.getActiveInitialConnection().getEndpoint().phoneNumber;
+            //var phn = new displayCaller(contact.getActiveInitialConnection().getEndpoint().phoneNumber);
+            //$.notify("Alert!", {align:"center", verticalAlign:"top"});
+            //$(".elem-demo").notify("Hello Box");
+        } else {
+            logInfoMsg("This is an existing contact for this agent");
+        }
+        logInfoMsg("La file d'attente est " + contact.getQueue().name);
+        //logInfoMsg("Contact attributes are " + JSON.stringify(contact.getAttributes()));
+        contact.onIncoming(handleContactIncoming);
+        contact.onAccepted(handleContactAccepted);
+        contact.onConnected(handleContactConnected);
+        contact.onEnded(handleContactEnded);
+        
+    }
+
+
+ </script>
+
+
+</body>
+
+{% else %}
+
+    <meta http-equiv="REFRESH" content="0;url= 'appels_sortants\index.html' ">
+
+
+
+
+{% endif %}
+
+{% endblock %}

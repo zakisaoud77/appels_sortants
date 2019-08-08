@@ -1,0 +1,18 @@
+
+{% extends 'appels_sortants/base.html' %}
+{% load django_tables2 %}
+{% block content %}
+{% load staticfiles %}
+
+<script src="{% static "js/jquery.js" %}"></script>
+<script src="{% static "js/rango-jquery.js" %}"></script>
+
+<form action="{% url 'appels_sortants:historique_delete' %}" method="post">{% csrf_token %}
+	<input type="hidden" name="_method" value="delete">
+	<button class="btn btn-danger btn-md"  Onclick="return ConfirmDelete2()" id="btndelete" data-toggle="tooltip" title="Supprimer tous les historiques" type="submit" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-trash"></span>
+	Clean table</button>
+</form>
+
+
+{% render_table table %}
+{% endblock content %}

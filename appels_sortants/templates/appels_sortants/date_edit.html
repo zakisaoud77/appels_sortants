@@ -1,0 +1,57 @@
+{% extends 'appels_sortants/base.html' %}
+{% load staticfiles %}
+{% block content %}
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Datepicker - Default functionality</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="{% static "js/jquery.datetimepicker.full.js" %}"></script>
+  <link rel="stylesheet" href="{% static 'css/jquery.datetimepicker.css' %}">
+
+  <script>
+  $( function() {
+    $('#datetimepicker').datetimepicker({ format:'d/m/Y h:m' });
+
+  } );
+  </script>
+</head>
+
+<body>
+   
+
+
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <form method="POST"  class="contact-form">
+            {% csrf_token %}
+                <div class="modal-header">
+                    <h4 class="modal-title"> Veuillez fixer une date pour le prochain appel </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                  {% csrf_token %}
+                  {{ form.as_p }}
+                  <button Onclick="return ConfirmEdit()" id="btnedite" type="submit" class="save btn btn-default" title="Sauvgarder les modifications"> Sauvgarder</button>
+               </form>
+               <!--div class="modal-footer">
+                   <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                   <input type="submit" class="btn btn-success" value="Add">
+               </div-->
+        </form>
+    </div>
+</div>
+
+
+
+
+
+</body>
+
+
+{% endblock %}

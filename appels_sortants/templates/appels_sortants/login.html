@@ -1,0 +1,32 @@
+{% extends 'appels_sortants/base.html' %}
+{% block content %}
+
+
+<div class="form-bg4"> 
+  <form action="{% url 'appels_sortants:user_login' %}" enctype="multipart/form-data" method="POST" class="contact-form">
+     {% csrf_token %}
+    <div class="container-fluid">
+        <div class="col-md-6">
+          <div class="form-group2"> 
+         <h1 class="heading" style="color: white;margin-top: auto;"> Login </h1> 	
+         <h3 class="heading" style="color: white;"> Please login to continue. </h3>
+
+          <div class="input-group"> 
+        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+          <input type="text" name="username" placeholder="Username">
+         </div>
+
+        <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-key"></i></span>
+          <input type="password" name="password" placeholder="Password">
+        </div>
+
+        <button id="btlogin" class="btn btn-success btn-md"  type="submit" name="Login" value="Login"> Login </button>
+        
+
+    </div>
+ </div>
+</form>
+</div>
+
+{% endblock %}

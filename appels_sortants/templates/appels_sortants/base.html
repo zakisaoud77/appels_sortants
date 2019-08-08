@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Base</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css">
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{% static 'css/appels_sortants.css' %}">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="{% static "js/rango-jquery.js" %}"></script>
+
+
+</head>
+  <body>
+
+
+    <nav class="navbar navbar-default navbar-static-top">
+
+      <div class="container">
+        <ul class="nav navbar-nav">
+          {% if user.is_superuser %}
+          <li class="dropdown">
+           <a href="javascript:void(0)" class="dropbtn"><span class="glyphicon glyphicon-th-list" title="Liste de contacts" style="margin: 4px;color:DodgerBlue"></span></a>
+              <div class="dropdown-content">
+               <a href="{% url 'appels_sortants:contact_table' %}"> Liste de contacts</a>
+               <!--a href="{% url 'appels_sortants:contact_new' %}" > Ajouter un contact</a-->
+               <a href="{% url 'appels_sortants:user_table' %}"> Liste des opérateur</a>
+               <a href="{% url 'appels_sortants:historique_table' %}">Historique</a>
+              </div>
+          </li>
+          {% endif %}
+
+          <a class="navbar-brand" style="font-size: 2em; padding-top: 0px;
+" href="{% url 'appels_sortants:contacts_list' %}"> <img alt="Image" border="0" class="left fixedwidth" src="{% static "img/appap_color2x.png" %}"  style="text-decoration: none; -ms-interpolation-mode: bicubic; border: 0; height: auto; width: 110px; max-width: 155px; display: block;" title="Image" width="155"/> </a>
+
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+
+            {% if user.is_authenticated %}
+            <li><a class="glyphicon glyphicon-log-out" style="font-size: 15px"  href="{% url 'appels_sortants:logout' %}"> Logout</a></li>
+            {% else %}
+            <li><a class="glyphicon glyphicon-log-in" style="font-size: 18px" href="{% url 'appels_sortants:user_login' %}"> Login</a></li>
+            <li><a class="glyphicon glyphicon-user" style="font-size: 18px" href="{% url 'appels_sortants:register' %}">Signup</a></li>
+          {% endif %}
+      </ul>
+
+
+      </div>
+    </nav>
+
+
+      <div class="container">
+
+            {% block content %}
+            {% endblock %}
+
+      </div>
+  </body>
+</html>

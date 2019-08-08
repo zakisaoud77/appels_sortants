@@ -1,0 +1,83 @@
+{% extends "appels_sortants/base.html" %}
+{% load staticfiles %}
+{% block content %}
+
+
+<div class="form-bg">
+  
+  <form enctype="multipart/form-data" method="POST" class="contact-form">
+   
+    <div class="container-fluid" >
+        <div class="col-md-6">
+  
+          {% if registered %}
+            <h1 style="height: 300px;padding-top: 25%;" >Merci pour Votre inscription!</h1>
+          {% else %}
+
+       <h1 class="heading"> Inscription </h1>    
+       <div class="form-group">  
+            <h3>Remplissez le formulaire.</h3>
+              {% csrf_token %}
+
+        
+        <div class="input-group"> 
+        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+         {{ user_form.username  }}
+         </div>
+
+        <div class="input-group"> 
+        <span class="input-group-addon"><i class="fas fa-at"></i></span>
+        {{ user_form.email  }}
+         </div>
+
+
+        <div class="input-group">
+        <span class="input-group-addon"><i class="fa fa-key"></i></span>
+         {{ user_form.password}} 
+        </div>
+
+        <div class="input-group"> 
+        <span class="input-group-addon"><i class="far fa-address-book"> </i></span>
+          {{ profile_form.site_personnel }} 
+        </div>
+
+
+        <div class="input-group">
+        <span class="input-group-addon"><i  class="fas fa-images"></i></span>
+          {{ profile_form.profile_pic }}
+        </div>
+
+
+          <center>
+          <button  id="btlogin" type="submit" class="btn btn-success btn-lg" data-toggle="tooltip" title="Sauvgarder les modifications"><span class="glyphicon glyphicon-ok"></span> Créer un compte </button>
+          </center>        
+
+      {% endif %}
+    </div>
+ </div>
+</div>
+
+</form>
+</div>
+ 
+ <!--div class="container">
+    <div class="contact-form">
+      {% if registered %}
+        <h1>Thank you for registering!</h1>
+      {% else %}
+        <h1>Inscription</h1>
+        <h3>Remplissez le formulaire.</h3>
+       <form enctype="multipart/form-data" method="POST">
+          {% csrf_token %}
+          {{ user_form.as_p }}
+          {{ profile_form.as_p }}
+          <center>
+          <button  type="submit" class="btn btn-success btn-lg" data-toggle="tooltip" title="Sauvgarder les modifications"><span class="glyphicon glyphicon-ok"></span> Sauvegarder</button>
+          </center>        
+        </form>
+      {% endif %}
+    </div>
+</div-->
+
+
+{% endblock %}
