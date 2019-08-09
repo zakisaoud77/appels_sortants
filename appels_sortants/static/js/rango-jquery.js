@@ -47,10 +47,14 @@ $(document).ready(function(){
 // et pour enregistrer la date de l'appel
 
 
+
+
 $(document).ready(function(){
 $("#bouton_call").click(function(){
 
-        $(this).fadeOut("slow");
+
+        //$("#bouton_raccroche").fadeIn("slow")
+
         var catid ;
         catid = $(this).attr("data-catid");
 
@@ -63,14 +67,33 @@ $("#bouton_call").click(function(){
          },
          success: function( data ) 
          {  
-            $("#bouton_dis").fadeIn("slow");
-            $("#bouton_nondis").fadeIn("slow");
-
-            console.log(data);
+            
+            //$("#bouton_dis").fadeIn("slow");
+            //$("#bouton_nondis").fadeIn("slow");
+            //console.log(data);
 
          }
 
         })
+
+        });
+      });
+
+
+ $(document).ready(function(){
+ $("#bouton_raccroche").click(function(){
+
+            
+            //$(this).fadeOut("slow");
+            $("#bouton_dis").fadeIn("slow");
+            $("#bouton_nondis").fadeIn("slow");
+
+
+            //$('#myModal3').modal('hide');
+            //$('body').removeClass('modal-open');
+            //$('.modal-backdrop').remove();
+
+
 
         });
       });
@@ -85,9 +108,10 @@ $(document).ready(function(){
         var radioValue = $("input[name='drone']:checked").val();
         var catid = $(this).attr("data-catid");
 
+        /*
         if(radioValue){
                 alert("Your are a - " + radioValue);
-            }
+            } */
 
         $.ajax(
         {
@@ -101,8 +125,15 @@ $(document).ready(function(){
 
          success: function( data ) 
          {  
+
+           var uri = window.location.toString();
+           if (uri.indexOf("?") > 0) {
+           var clean_uri = uri.substring(0, uri.indexOf("?"));
+           window.history.replaceState({}, document.title, clean_uri); }
             
             window.location = "/";
+
+            //window.location.href("/");
             //$("#bouton_suivant").click();
 
          }
@@ -134,8 +165,14 @@ $("#bt_next_date").click(function(){
          success: function( data ) 
          {  
 
+
+            var uri = window.location.toString();
+            if (uri.indexOf("?") > 0) {
+            var clean_uri = uri.substring(0, uri.indexOf("?"));
+            window.history.replaceState({}, document.title, clean_uri); }
             //alert(" Vous avez reporté l'appel avec le client " + catid);
             window.location = "/";
+            //window.location.href("/");
 
          }
 

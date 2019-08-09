@@ -9,13 +9,14 @@
   <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
   <script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>jQuery UI Datepicker - Default functionality</title>
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="/resources/demos/style.css">
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <!--script src="{% static "js/bootstrap.js" %}"></script-->
+
+
   <!--script src="{% static "js/jquery.datetimepicker.full.js" %}"></script-->
   <script src="{% static "js/jquery-ui-timepicker-addon.js" %}"></script>
 
@@ -24,7 +25,7 @@
 
   <script src="{% static "js/amazon-connect-v1.3.2.js" %}"></script>
 
-
+   
   <script>
   $( function() {
     //$('#datetimepicker').datetimepicker({ format:'d/m/Y h:m' });
@@ -91,7 +92,7 @@
         
         <!-- button id ="bouton_call" class="btn btn-success btn-md" data-catid="{{ contact.pk }}" type='submit'><span class="glyphicon glyphicon-earphone"></span> Appeler </button-->
 
-      <button id="bouton_call" class="btn btn-success btn-md" type='submit' data-toggle="modal" data-target="#myModal3"  data-catid="{{ contact.pk }}" > <span class="glyphicon glyphicon-earphone"></span>  Appeler </button>
+      <button id="bouton_call" class="btn btn-success btn-md  btn-rounded" type='submit' data-toggle="modal" data-target="#myModal3"  data-catid="{{ contact.pk }}" onclick="callPhone()" > <span class="glyphicon glyphicon-earphone"></span>  Appeler </button>
 
   
     </div>
@@ -99,10 +100,10 @@
 
     <div class = "bouton2">
 
-        <button id="bouton_dis" class="btn btn-success btn-md" type='submit' data-toggle="modal" data-target="#myModal2"><span class="glyphicon glyphicon-ok-sign"></span> Disponible </button>
+        <button id="bouton_dis" class="btn btn-info btn-md" type='submit' data-toggle="modal" data-target="#myModal2"><span class="glyphicon glyphicon-plus-sign"></span> Disponible </button>
 
 
-        <button id="bouton_nondis" class="btn btn-warning btn-md" type='submit' data-toggle="modal" data-target="#myModal"> <span class="glyphicon glyphicon-remove-sign"></span> Non Disponible </button>
+        <button id="bouton_nondis" class="btn btn-warning btn-md" type='submit' data-toggle="modal" data-target="#myModal"> <span class="glyphicon glyphicon-minus-sign"></span> Non Disponible </button>
         
 
      </div>
@@ -139,12 +140,13 @@
 <div class="modal fade" id="myModal2" role="dialog" aria-labelledby="myModalLabel">
  <div class="modal-dialog">
     <div class="modal-content">
+       <form id="myform_radio" method="POST">
+        {% csrf_token %}
         <div class="modal-header">
           <h4 class="modal-title"> Est ce que le client était intéressé ?  </h4>
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
         <div class="modal-body">
-        <form id="myForm">
           <div>
            <input  type="radio" id="oui_interese" name="drone" value="interested" checked>
            <label for="huey">Oui</label>
@@ -168,11 +170,18 @@
     <div class="modal-content"  >
         <div class="modal-header" >
           <!--h4 class="modal-title"> Amazon connect </h4-->
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <button id="close_modal3" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
         <div class="modal-body" style="padding: 0px;">
 
-        <div id="containerDiv" style="width: 320px; min-width: 200px; height: 465px; min-height: 400px; "></div>
+        <!--div id="containerDiv" style="width: 320px; min-width: 200px; height: 465px; min-height: 400px; "></div-->
+
+        <div id="containerDiv" style="width: 320px; min-width: 200px; height: 227px; "></div>
+
+
+      <button id="bouton_raccroche" data-catid="{{ contact.pk }}" class="btn btn-danger btn-lg  btn-rounded" type='submit'  onclick="disconnectContact()" data-dismiss="modal" aria-hidden="true" > <span class="glyphicon glyphicon-remove-sign"></span>  Raccrocher </button>
+
+
 
       </div>
     </div>
@@ -180,11 +189,16 @@
 </div>
 
 
-   <script type="text/javascript">
+
+ <script type="text/javascript">
+
+
+
  //replace with the CCP URL for your Amazon Connect instance
  var ccpUrl = "https://mycallcenterexperteam.awsapps.com/connect/ccp#/";
+     window.myCPP = window.myCPP || {};
 
-    window.myCPP = window.myCPP || {};
+
  connect.core.initCCP(containerDiv, {
     ccpUrl: ccpUrl,
     loginPopup: true,
@@ -192,24 +206,69 @@
     allowFramedSoftphone: true
     }
  });
-    
 
-  connect.contact(subscribeToContactEvents);
-  connect.agent(function subscribeToAgentEvents(agent) {
-        window.myCPP.agent = agent;
-        agentGreetingDiv.innerHTML = '<h3>Bonjour  ' + agent.getName() + '!</h3>';
-        //logInfoMsg("Enregistrement des événements de  " + agent.getName());
-        //logInfoMsg("Le statut de " +  agent.getName() + agent.getStatus().name);
-        displayAgentStatus(agent.getStatus().name);
-        agent.onRefresh(handleAgentRefresh);
-        agent.onRoutable(handleAgentRoutable);
-        agent.onNotRoutable(handleAgentNotRoutable);
-        agent.onOffline(handleAgentOffline);
+    connect.contact(subscribeToContactEvents);
+    connect.agent(subscribeToAgentEvents);
+
+function callPhone() {
+
+         //myPhoneNumber = "+33767965986"
+         console.log( {{ contact.mobile }} )
+         var myPhoneNumber = "+" + {{ contact.mobile }}
+        //myPhoneNumber = myPhoneNumber;
+      //  document.getElementById("infoPersonCalled").innerHTML = "Appel en cours vers " + myPhoneNumber;
+
+    /*setTimeout(function (){
+    document.getElementById("infoPersonCalled").innerHTML = "";
+    }, 8000);*/
+        var myEndPoint = connect.Endpoint.byPhoneNumber(myPhoneNumber);
+        console.log(myEndPoint);
+        window.myCPP.agent.connect(myEndPoint, {
+            success: function() {
+                //alert('success');
+              // alert( "brrrrrrrrrrrrr1" )
+            },
+            failure: function() {
+                //alert('error');
+                //alert( "brrrrrrrrrrrrr" )
+            }
+
+        });
+
+        //var state =   window.myCPP.agent.getStatus().name
+        //alert(state);
+
+       //window.myCPP.agent.onAfterCallWork(function(agent) { alert( "After call" ); });
+
     }
-);
 
-  var myPhoneNumber = {{ contact.mobile }};
-  var myEndPoint = connect.Endpoint.byPhoneNumber(myPhoneNumber);
+
+    function disconnectContact() {
+        //cannot do contact.destroy(), can only destroy (hang-up) agent connection
+        window.myCPP.contact.getAgentConnection().destroy({
+            success: function () {
+                //logInfoMsg("Disconnected contact via Streams");
+
+            },
+            failure: function () {
+               // logInfoMsg("Failed to disconnect contact via Streams");
+   
+            }
+        });
+        // alert( "Je suis poussama" )
+    }
+
+    function callPhone2() {
+
+        var e = document.getElementById("selectPhone");
+        var selectedName = e.options[e.selectedIndex].text;
+        var myPhoneNumber = e.options[e.selectedIndex].value;
+  //  myPhoneNumber = "+33" + myPhoneNumber;
+        document.getElementById("infoPersonCalled").innerHTML = "Appel en cours vers " + selectedName + "("+ myPhoneNumber + ")";
+    setTimeout(function (){
+    document.getElementById("infoPersonCalled").innerHTML = "";
+    }, 8000);
+        var myEndPoint = connect.Endpoint.byPhoneNumber(myPhoneNumber);
         window.myCPP.agent.connect(myEndPoint, {
             success: function() {
                 //alert('success');
@@ -218,7 +277,34 @@
                 //alert('error');
             }
         });
-function subscribeToContactEvents(contact) {
+    }
+
+
+    function CallEXT() {
+    var txt;
+    var myPhoneNumber = prompt("Entrez le numéro de téléphone avec +33 :", "+33668431756");
+        //txt = "0033668431756";
+        //document.getElementById("demo").innerHTML = txt;
+        document.getElementById("infoPersonCalled").innerHTML = "Appel en cours vers " + myPhoneNumber;
+    setTimeout(function (){
+    document.getElementById("infoPersonCalled").innerHTML = "";
+    }, 8000);
+    var myEndPoint = connect.Endpoint.byPhoneNumber(myPhoneNumber);
+                window.myCPP.agent.connect(myEndPoint, {
+                success: function() {
+                       // alert('success');
+                                    },
+                    failure: function() {
+                //alert('error');
+            }
+        });
+    
+        
+  //console.log(txt + "message " + phone);
+}
+
+
+    function subscribeToContactEvents(contact) {
         window.myCPP.contact = contact;
         //logInfoMsg("Enregistrement des événements du contact");
         if (contact.getActiveInitialConnection()
@@ -241,8 +327,94 @@ function subscribeToContactEvents(contact) {
         
     }
 
+    function handleContactIncoming(contact) {
+        if (contact) {
+            logInfoEvent("[contact.onIncoming] un appel entrant. status " + contact.getStatus().type);
+        } else {
+            logInfoEvent("[contact.onIncoming] un appel entrant de status Null");
+        }
+    }
+
+    function handleContactAccepted(contact) {
+        if (contact) {
+            logInfoEvent("[contact.onAccepted] Le contact est accepté par l'agent. status " + contact.getStatus().type);
+        } else {
+            logInfoEvent("[contact.onAccepted] Le contact est accepté par l'agent. status null");
+        }
+    }
+
+    function handleContactConnected(contact) {
+        if (contact) {
+            logInfoEvent("[contact.onConnected] Le contact est connecté à l'agent. status " + contact.getStatus().type);
+        } else {
+            logInfoEvent("[contact.onConnected] Le contact est connecté à l'agent. status null");
+        }
+    }
+
+    function handleContactEnded(contact) {
+        if (contact) {
+            logInfoEvent("[contact.onEnded] Le contact est déconnecté à l'agent. status " + contact.getStatus().type);
+        } else {
+            logInfoEvent("[contact.onEnded] Le contact est déconnecté à l'agent. status null");
+        }
+    }
+
+    function subscribeToAgentEvents(agent) {
+        window.myCPP.agent = agent;
+        agentGreetingDiv.innerHTML = '<h3>Bonjour  ' + agent.getName() + '!</h3>';
+        //logInfoMsg("Enregistrement des événements de  " + agent.getName());
+        //logInfoMsg("Le statut de " +  agent.getName() + agent.getStatus().name);
+        displayAgentStatus(agent.getStatus().name);
+        agent.onRefresh(handleAgentRefresh);
+        agent.onRoutable(handleAgentRoutable);
+        agent.onNotRoutable(handleAgentNotRoutable);
+        agent.onOffline(handleAgentOffline);
+    }
+
+    function handleAgentRefresh(agent) {
+        logInfoEvent("[agent.onRefresh] Agent data refreshed. Agent status is " + agent.getStatus().name);
+        displayAgentStatus(agent.getStatus().name);
+    }
+
+    function handleAgentRoutable(agent) {
+        logInfoEvent("[agent.onRoutable] Agent is routable. Agent status is " + agent.getStatus().name);
+        displayAgentStatus(agent.getStatus().name);
+    }
+
+    function handleAgentNotRoutable(agent) {
+        logInfoEvent("[agent.onNotRoutable] Agent is online, but not routable. Agent status is " + agent.getStatus().name);
+        displayAgentStatus(agent.getStatus().name);
+    }
+
+    function handleAgentOffline(agent) {
+        logInfoEvent("[agent.onOffline] Agent is offline. Agent status is " + agent.getStatus().name);
+        displayAgentStatus(agent.getStatus().name);
+    }
+
+    function logMsgToScreen(msg) {
+        logMsgs.innerHTML = '<div>' + new Date().toLocaleTimeString().fontcolor("green") + ' ' + msg.fontcolor("red") + '</div>' + logMsgs.innerHTML;
+    }
+
+    function logEventToScreen(msg) {
+        eventMsgs.innerHTML = '<div>' + new Date().toLocaleTimeString().fontcolor("black") + ' ' + msg.fontcolor("blue") + '</div>' + eventMsgs.innerHTML;
+    }
+
+    function logInfoMsg(msg) {
+        connect.getLog().info(msg);
+        logMsgToScreen(msg);
+    }
+
+    function logInfoEvent(eventMsg) {
+        connect.getLog().info(eventMsg);
+        logEventToScreen(eventMsg);
+    }
+
+    function displayAgentStatus(status) {
+        agentStatusDiv.innerHTML = 'Status: <span style="font-weight: bold">' + status + '</span>';
+    }
 
  </script>
+
 
 
 </body>

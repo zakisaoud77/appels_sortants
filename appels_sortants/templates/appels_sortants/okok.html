@@ -35,11 +35,22 @@
  <div id="containerDiv" style="width: 320px; min-width: 200px; height: 465px; min-height: 400px; ">
  <!--Amazon CCP will go here-->
  </div>
+
+      <div id="callDiv" style="text-align: center">
+         <label for="myPhoneNumber"></label>
+         <input id="myPhoneNumber" type="text" name="mobile" pattern="[0-9]{9}" title="Entrer les 9 chiffres de votre numéro +33..." placeholder="Mobile number (+33)" required>
+        <button type="button" onclick="callPhone()">
+        Call</button>
+      </div>
+
+
  </body>
  </html>
  <script type="text/javascript">
  //replace with the CCP URL for your Amazon Connect instance
  var ccpUrl = "https://mycallcenterexperteam.awsapps.com/connect/ccp#/";
+     window.myCPP = window.myCPP || {};
+
 
  connect.core.initCCP(containerDiv, {
     ccpUrl: ccpUrl,
@@ -48,6 +59,188 @@
     allowFramedSoftphone: true
     }
  });
+
+    connect.contact(subscribeToContactEvents);
+    connect.agent(subscribeToAgentEvents);
+
+function callPhone() {
+
+        var myPhoneNumber = document.getElementById("myPhoneNumber").value;
+         console.log(myPhoneNumber);
+
+         myPhoneNumber = "+33767965986"
+        //myPhoneNumber = myPhoneNumber;
+      //  document.getElementById("infoPersonCalled").innerHTML = "Appel en cours vers " + myPhoneNumber;
+
+    /*setTimeout(function (){
+    document.getElementById("infoPersonCalled").innerHTML = "";
+    }, 8000);*/
+        var myEndPoint = connect.Endpoint.byPhoneNumber(myPhoneNumber);
+        console.log(myEndPoint);
+        window.myCPP.agent.connect(myEndPoint, {
+            success: function() {
+                //alert('success');
+            },
+            failure: function() {
+                //alert('error');
+            }
+        });
+    }
+
+    function callPhone2() {
+        var e = document.getElementById("selectPhone");
+    var selectedName = e.options[e.selectedIndex].text;
+    var myPhoneNumber = e.options[e.selectedIndex].value;
+  //  myPhoneNumber = "+33" + myPhoneNumber;
+        document.getElementById("infoPersonCalled").innerHTML = "Appel en cours vers " + selectedName + "("+ myPhoneNumber + ")";
+    setTimeout(function (){
+    document.getElementById("infoPersonCalled").innerHTML = "";
+    }, 8000);
+        var myEndPoint = connect.Endpoint.byPhoneNumber(myPhoneNumber);
+        window.myCPP.agent.connect(myEndPoint, {
+            success: function() {
+                //alert('success');
+            },
+            failure: function() {
+                //alert('error');
+            }
+        });
+    }
+
+
+    function CallEXT() {
+    var txt;
+    var myPhoneNumber = prompt("Entrez le numéro de téléphone avec +33 :", "+33668431756");
+        //txt = "0033668431756";
+        //document.getElementById("demo").innerHTML = txt;
+        document.getElementById("infoPersonCalled").innerHTML = "Appel en cours vers " + myPhoneNumber;
+    setTimeout(function (){
+    document.getElementById("infoPersonCalled").innerHTML = "";
+    }, 8000);
+    var myEndPoint = connect.Endpoint.byPhoneNumber(myPhoneNumber);
+                window.myCPP.agent.connect(myEndPoint, {
+                success: function() {
+                       // alert('success');
+                                    },
+                    failure: function() {
+                //alert('error');
+            }
+        });
+    
+        
+  //console.log(txt + "message " + phone);
+}
+
+
+    function subscribeToContactEvents(contact) {
+        window.myCPP.contact = contact;
+        //logInfoMsg("Enregistrement des événements du contact");
+        if (contact.getActiveInitialConnection()
+            && contact.getActiveInitialConnection().getEndpoint()) {
+            logInfoMsg("Un appel de : " + contact.getActiveInitialConnection().getEndpoint().phoneNumber);
+            displayCaller(contact.getActiveInitialConnection().getEndpoint().phoneNumber);
+            var Callers = contact.getActiveInitialConnection().getEndpoint().phoneNumber;
+            //var phn = new displayCaller(contact.getActiveInitialConnection().getEndpoint().phoneNumber);
+            //$.notify("Alert!", {align:"center", verticalAlign:"top"});
+            //$(".elem-demo").notify("Hello Box");
+        } else {
+            logInfoMsg("This is an existing contact for this agent");
+        }
+        logInfoMsg("La file d'attente est " + contact.getQueue().name);
+        //logInfoMsg("Contact attributes are " + JSON.stringify(contact.getAttributes()));
+        contact.onIncoming(handleContactIncoming);
+        contact.onAccepted(handleContactAccepted);
+        contact.onConnected(handleContactConnected);
+        contact.onEnded(handleContactEnded);
+        
+    }
+
+    function handleContactIncoming(contact) {
+        if (contact) {
+            logInfoEvent("[contact.onIncoming] un appel entrant. status " + contact.getStatus().type);
+        } else {
+            logInfoEvent("[contact.onIncoming] un appel entrant de status Null");
+        }
+    }
+
+    function handleContactAccepted(contact) {
+        if (contact) {
+            logInfoEvent("[contact.onAccepted] Le contact est accepté par l'agent. status " + contact.getStatus().type);
+        } else {
+            logInfoEvent("[contact.onAccepted] Le contact est accepté par l'agent. status null");
+        }
+    }
+
+    function handleContactConnected(contact) {
+        if (contact) {
+            logInfoEvent("[contact.onConnected] Le contact est connecté à l'agent. status " + contact.getStatus().type);
+        } else {
+            logInfoEvent("[contact.onConnected] Le contact est connecté à l'agent. status null");
+        }
+    }
+
+    function handleContactEnded(contact) {
+        if (contact) {
+            logInfoEvent("[contact.onEnded] Le contact est déconnecté à l'agent. status " + contact.getStatus().type);
+        } else {
+            logInfoEvent("[contact.onEnded] Le contact est déconnecté à l'agent. status null");
+        }
+    }
+
+    function subscribeToAgentEvents(agent) {
+        window.myCPP.agent = agent;
+        agentGreetingDiv.innerHTML = '<h3>Bonjour  ' + agent.getName() + '!</h3>';
+        //logInfoMsg("Enregistrement des événements de  " + agent.getName());
+        //logInfoMsg("Le statut de " +  agent.getName() + agent.getStatus().name);
+        displayAgentStatus(agent.getStatus().name);
+        agent.onRefresh(handleAgentRefresh);
+        agent.onRoutable(handleAgentRoutable);
+        agent.onNotRoutable(handleAgentNotRoutable);
+        agent.onOffline(handleAgentOffline);
+    }
+
+    function handleAgentRefresh(agent) {
+        logInfoEvent("[agent.onRefresh] Agent data refreshed. Agent status is " + agent.getStatus().name);
+        displayAgentStatus(agent.getStatus().name);
+    }
+
+    function handleAgentRoutable(agent) {
+        logInfoEvent("[agent.onRoutable] Agent is routable. Agent status is " + agent.getStatus().name);
+        displayAgentStatus(agent.getStatus().name);
+    }
+
+    function handleAgentNotRoutable(agent) {
+        logInfoEvent("[agent.onNotRoutable] Agent is online, but not routable. Agent status is " + agent.getStatus().name);
+        displayAgentStatus(agent.getStatus().name);
+    }
+
+    function handleAgentOffline(agent) {
+        logInfoEvent("[agent.onOffline] Agent is offline. Agent status is " + agent.getStatus().name);
+        displayAgentStatus(agent.getStatus().name);
+    }
+
+    function logMsgToScreen(msg) {
+        logMsgs.innerHTML = '<div>' + new Date().toLocaleTimeString().fontcolor("green") + ' ' + msg.fontcolor("red") + '</div>' + logMsgs.innerHTML;
+    }
+
+    function logEventToScreen(msg) {
+        eventMsgs.innerHTML = '<div>' + new Date().toLocaleTimeString().fontcolor("black") + ' ' + msg.fontcolor("blue") + '</div>' + eventMsgs.innerHTML;
+    }
+
+    function logInfoMsg(msg) {
+        connect.getLog().info(msg);
+        logMsgToScreen(msg);
+    }
+
+    function logInfoEvent(eventMsg) {
+        connect.getLog().info(eventMsg);
+        logEventToScreen(eventMsg);
+    }
+
+    function displayAgentStatus(status) {
+        agentStatusDiv.innerHTML = 'Status: <span style="font-weight: bold">' + status + '</span>';
+    }
+
  </script>
 
  </html>
